@@ -6,6 +6,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../include/Player.hpp"
+
 int main() 
 {
   sf::RenderWindow window(sf::VideoMode(800, 600), "Asteroids", 
@@ -18,8 +20,12 @@ int main()
   sf::Texture triangle_texture;
   if (!triangle_texture.loadFromFile("images/triangle.png"))
     return -1;
-  sf::Sprite triangle(triangle_texture);
+  struct Player triangle;
+  triangle.setTexture(triangle_texture);
+  triangle.angle = 0.0f;
+  triangle.rotRate = 10.0f;
 
+  sf::Clock clock;
   while (window.isOpen())
   {
     sf::Event event;
@@ -31,6 +37,13 @@ int main()
         if (event.key.code == sf::Keyboard::Escape)
           window.close();
     }
+
+    sf::Time dt = clock.restart();
+    float dt_sec = dt.asSeconds();
+
+    triangle.setRotation(triangle.angle);
+
+    triangle.angle += triangle.rotRate * dt_sec;
 
     window.clear();
     window.draw(triangle);
